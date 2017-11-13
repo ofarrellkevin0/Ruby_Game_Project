@@ -1,10 +1,10 @@
 class Basic_Game_Elements_Class
   
   def start_game
-    weapon_number = $Basic_Game_Elements_Class.get_weapon_user_input()
-    weapon_name = $Basic_Game_Elements_Class.weapon_name_generator(weapon_number)
-    shield_generator = $Basic_Game_Elements_Class.get_shield_user_input()
-    shield_name = $Basic_Game_Elements_Class.shield_name_generator(shield_generator)
+    weapon_number = get_weapon_user_input()
+    weapon_name = weapon_name_generator(weapon_number)
+    shield_generator = get_shield_user_input()
+    shield_name = shield_name_generator(shield_generator)
     health = rand(100...200)
     your_speed = rand(1...100)
     $User_Info = User_Class.new(weapon_name, shield_name, 0, weapon_number, shield_generator, health, your_speed)
@@ -15,18 +15,315 @@ class Basic_Game_Elements_Class
     $Enemy_Info = Enemy_Class.new(damage_generator, 0, enemy_health, enemy_speed)
     
     $Main_Game_Elements_Class.method_for_main_game()
-    $Basic_Game_Elements_Class.new_game()
+    new_game()
   end
   
+  def run_command_activated(user_health)
+    run_chance_generator = rand(1...101)
+    if run_chance_generator > 69
+      run_chance = true
+      puts "You have successfully run from the enemy!"
+      puts ""
+    else
+      run_chance = false
+      puts "Running was unsuccessful!"
+      puts ""
+      enemy_critical_generator = rand(1...101)
+      if enemy_critical_generator >= 90
+        enemy_critical_attack($Enemy_Info.damage_generator)
+        user_health = user_health - $Enemy_Info.enemy_damage
+        if user_health < 0
+          user_health = 0
+        end
+        puts "Critical hit! The enemy has damaged you for " + $Enemy_Info.enemy_damage.to_s + " your health is now " + user_health.to_s
+        puts ""
+        if user_health <= 0
+          puts "You have been defeated"
+          puts ""
+        end
+      else
+        enemy_attack($damage_generator)
+        user_health = user_health - $Enemy_Info.enemy_damage
+        if user_health < 0
+          user_health = 0
+        end
+        puts "The enemy has damaged you for " + $Enemy_Info.enemy_damage.to_s + " your health is now " + user_health.to_s
+        puts ""
+        if user_health <= 0
+          puts "You have been defeated"
+          puts ""
+        end
+      end
+    end
+    return run_chance, user_health
+  end
+      
+  def enemy_greater_speed(enemy_health, user_health)
+    
+    enemy_critical_generator = rand(1...101)
+    if enemy_critical_generator >= 90
+      enemy_critical_attack($Enemy_Info.damage_generator)
+      user_health = user_health - $Enemy_Info.enemy_damage
+      if user_health < 0
+        user_health = 0
+      end
+      puts ""
+      puts "Critical hit! The enemy has damaged you for " + $Enemy_Info.enemy_damage.to_s + " your health is now " + user_health.to_s
+      puts ""
+      if user_health <= 0
+        puts "You have been defeated"
+        puts ""
+      end
+    else
+      enemy_attack($Enemy_Info.damage_generator)
+      user_health = user_health - $Enemy_Info.enemy_damage
+      if user_health < 0
+        user_health = 0
+      end
+      puts ""
+      puts "The enemy has damaged you for " + $Enemy_Info.enemy_damage.to_s + " your health is now " + user_health.to_s
+      puts ""
+      if user_health <= 0
+        puts "You have been defeated"
+        puts ""
+      end
+    end
+
+    if user_health > 0
+      critical_chance = rand(1...101)
+      if critical_chance >= 90
+        critical_attack($User_Info.weapon_generator)
+        enemy_health = enemy_health - $User_Info.weapon_damage
+        if enemy_health < 0
+          enemy_health = 0
+        end
+        puts ""
+        puts "Critical hit! You have damaged the enemy for " + $User_Info.weapon_damage.to_s + " the enemy's health is now " + enemy_health.to_s
+        puts ""
+        if enemy_health <= 0
+          puts "The enemy has been defeated"
+          puts ""
+        end
+      else
+        attack($User_Info.weapon_generator)
+        enemy_health = enemy_health - $User_Info.weapon_damage
+        if enemy_health < 0
+          enemy_health = 0
+        end
+        puts ""
+        puts "You have damaged the enemy for " + $User_Info.weapon_damage.to_s + " the enemy's health is now " + enemy_health.to_s
+        puts ""
+        if enemy_health <= 0
+          puts "The enemy has been defeated"
+          puts ""
+        end
+      end
+    end
+    
+    return enemy_health, user_health
+  end
+  
+  def enemy_less_speed(enemy_health,user_health)
+    critical_chance = rand(1...101)
+    if critical_chance >= 90
+      critical_attack($User_Info.weapon_generator)
+      enemy_health = enemy_health - $User_Info.weapon_damage
+      if enemy_health < 0
+        enemy_health = 0
+      end
+      puts ""
+      puts "Critical hit! You have damaged the enemy for " + $User_Info.weapon_damage.to_s + " the enemy's health is now " + enemy_health.to_s
+      puts ""
+      if enemy_health <= 0
+        puts "The enemy has been defeated"
+        puts ""
+      end
+    else
+      attack($User_Info.weapon_generator)
+      enemy_health = enemy_health - $User_Info.weapon_damage
+      if enemy_health < 0
+        enemy_health = 0
+      end
+      puts ""
+      puts "You have damaged the enemy for " + $User_Info.weapon_damage.to_s + " the enemy's health is now " + enemy_health.to_s
+      puts ""
+      if enemy_health <= 0
+        puts "The enemy has been defeated"
+        puts ""
+      end
+    end
+
+    if enemy_health > 0
+      enemy_critical_generator = rand(1...101)
+      if enemy_critical_generator >= 90
+        enemy_critical_attack($Enemy_Info.damage_generator)
+        user_health = user_health - $Enemy_Info.enemy_damage
+        if user_health < 0
+          user_health = 0
+        end
+        puts ""
+        puts "Critical hit! The enemy has damaged you for " + $Enemy_Info.enemy_damage.to_s + " your health is now " + user_health.to_s
+        puts ""
+        if user_health <= 0
+          puts "You have been defeated"
+          puts ""
+        end
+      else
+        enemy_attack($Enemy_Info.damage_generator)
+        user_health = user_health - $Enemy_Info.enemy_damage
+        if user_health < 0
+          user_health = 0
+        end
+        puts ""
+        puts "The enemy has damaged you for " + $Enemy_Info.enemy_damage.to_s + " your health is now " + user_health.to_s
+        puts ""
+        if user_health <= 0
+          puts "You have been defeated"
+          puts ""
+        end
+      end
+    end
+    return enemy_health, user_health
+  end
+  
+  def enemy_greater_speed_counter(enemy_health,user_health)
+    
+    enemy_critical_generator = rand(1...101)
+    if enemy_critical_generator >= 90
+      enemy_critical_attack_with_counter($Enemy_Info.damage_generator)
+      user_health = user_health - $Enemy_Info.enemy_damage
+      if user_health < 0
+        user_health = 0
+      end
+      puts ""
+      puts "Critical hit! The enemy has damaged you for " + $Enemy_Info.enemy_damage.to_s + " your health is now " + user_health.to_s
+      puts ""
+      if user_health <= 0
+        puts "You have been defeated"
+        puts ""
+      end
+    else
+      enemy_attack_with_counter($Enemy_Info.damage_generator)
+      user_health = user_health - $Enemy_Info.enemy_damage
+      if user_health < 0
+        user_health = 0
+      end
+      puts ""
+      puts "The enemy has damaged you for " + $Enemy_Info.enemy_damage.to_s + " your health is now " + user_health.to_s
+      puts ""
+      if user_health <= 0
+        puts "You have been defeated"
+        puts ""
+      end
+    end
+
+    if user_health > 0
+      critical_chance = rand(1...101)
+      if critical_chance >= 90
+        critical_counter($User_Info.shield_generator)
+        enemy_health = enemy_health - $User_Info.weapon_damage
+        if enemy_health < 0
+          enemy_health = 0
+        end
+        puts ""
+        puts "Critical hit! You have damaged the enemy for " + $User_Info.weapon_damage.to_s + " the enemy's health is now " + enemy_health.to_s
+        puts ""
+        if enemy_health <= 0
+          puts "The enemy has been defeated"
+          puts ""
+        end
+      else
+        counter($User_Info.shield_generator)
+        enemy_health = enemy_health - $User_Info.weapon_damage
+        if enemy_health < 0
+          enemy_health = 0
+        end
+        puts ""
+        puts "You have damaged the enemy for " + $User_Info.weapon_damage.to_s + " the enemy's health is now " + enemy_health.to_s
+        puts ""
+        if enemy_health <= 0
+          puts "The enemy has been defeated"
+          puts ""
+        end
+      end
+    end
+    
+    return enemy_health, user_health
+  end
+  
+  def enemy_less_speed_counter(enemy_health,user_health)
+    critical_chance = rand(1...101)
+    if critical_chance >= 90
+      critical_counter($User_Info.shield_generator)
+      enemy_health = enemy_health - $User_Info.weapon_damage
+      if enemy_health < 0
+        enemy_health = 0
+      end
+      puts ""
+      puts "Critical hit! You have damaged the enemy for " + $User_Info.weapon_damage.to_s + " the enemy's health is now " + enemy_health.to_s
+      puts ""
+      if enemy_health <= 0
+        puts "The enemy has been defeated"
+        puts ""
+      end
+    else
+      counter($User_Info.shield_generator)
+      enemy_health = enemy_health - $User_Info.weapon_damage
+      if enemy_health < 0
+        enemy_health = 0
+      end
+      puts ""
+      puts "You have damaged the enemy for " + $User_Info.weapon_damage.to_s + " the enemy's health is now " + enemy_health.to_s
+      puts ""
+      if enemy_health <= 0
+        puts "The enemy has been defeated"
+        puts ""
+      end
+    end
+
+    if enemy_health > 0
+      enemy_critical_generator = rand(1...101)
+      if enemy_critical_generator >= 90
+        enemy_critical_attack_with_counter($Enemy_Info.damage_generator)
+        user_health = user_health - $Enemy_Info.enemy_damage
+        if user_health < 0
+          user_health = 0
+        end
+        puts ""
+        puts "Critical hit! The enemy has damaged you for " + $Enemy_Info.enemy_damage.to_s + " your health is now " + user_health.to_s
+        puts ""
+        if user_health <= 0
+          puts "You have been defeated"
+          puts ""
+        end
+      else
+        enemy_attack_with_counter($Enemy_Info.damage_generator)
+        user_health = user_health - $Enemy_Info.enemy_damage
+        if user_health < 0
+          user_health = 0
+        end
+        puts ""
+        puts "The enemy has damaged you for " + $Enemy_Info.enemy_damage.to_s + " your health is now " + user_health.to_s
+        puts ""
+        if user_health <= 0
+          puts "You have been defeated"
+          puts ""
+        end
+      end
+    end
+    return enemy_health, user_health
+  end
+  
+  private
   def new_game
     puts "Would you like to start a new game? (1 = yes) (2 = no)"
     restart = Integer(gets.chomp)
     puts ""
     if restart == 1
-      weapon_number = $Basic_Game_Elements_Class.get_weapon_user_input()
-      weapon_name = $Basic_Game_Elements_Class.weapon_name_generator(weapon_number)
-      shield_generator = $Basic_Game_Elements_Class.get_shield_user_input()
-      shield_name = $Basic_Game_Elements_Class.shield_name_generator(shield_generator)
+      weapon_number = get_weapon_user_input()
+      weapon_name = weapon_name_generator(weapon_number)
+      shield_generator = get_shield_user_input()
+      shield_name = shield_name_generator(shield_generator)
       health = rand(100...200)
       your_speed = rand(1...100)
       $User_Info = User_Class.new(weapon_name, shield_name, 0, weapon_number, shield_generator, health, your_speed)
@@ -37,7 +334,7 @@ class Basic_Game_Elements_Class
       $Enemy_Info = Enemy_Class.new(damage_generator, 0, enemy_health, enemy_speed)
       
       $Main_Game_Elements_Class.method_for_main_game()
-      $Basic_Game_Elements_Class.new_game()
+      new_game()
       
     elsif restart == 2
       puts "goodbye!"
@@ -148,174 +445,6 @@ class Basic_Game_Elements_Class
     else
       $Enemy_Info.enemy_damage = rand(0...120)
     end
-  end
-  
-  def run_command_activated(user_health)
-    run_chance_generator = rand(1...101)
-    if run_chance_generator > 69
-      run_chance = true
-      puts "You have successfully run from the enemy!"
-      puts ""
-    else
-      run_chance = false
-      puts "Running was unsuccessful!"
-      puts ""
-      enemy_critical_generator = rand(1...101)
-      if enemy_critical_generator >= 90
-        $Basic_Game_Elements_Class.enemy_critical_attack($Enemy_Info.damage_generator)
-        user_health = user_health - $Enemy_Info.enemy_damage
-        if user_health < 0
-          user_health = 0
-        end
-        puts "Critical hit! The enemy has damaged you for " + $Enemy_Info.enemy_damage.to_s + " your health is now " + user_health.to_s
-        puts ""
-        if user_health <= 0
-          puts "You have been defeated"
-          puts ""
-        end
-      else
-        $Basic_Game_Elements_Class.enemy_attack($damage_generator)
-        user_health = user_health - $Enemy_Info.enemy_damage
-        if user_health < 0
-          user_health = 0
-        end
-        puts "The enemy has damaged you for " + $Enemy_Info.enemy_damage.to_s + " your health is now " + user_health.to_s
-        puts ""
-        if user_health <= 0
-          puts "You have been defeated"
-          puts ""
-        end
-      end
-    end
-    return run_chance, user_health
-  end
-      
-  def enemy_greater_speed(enemy_health, user_health)
-    
-    enemy_critical_generator = rand(1...101)
-    if enemy_critical_generator >= 90
-      $Basic_Game_Elements_Class.enemy_critical_attack($Enemy_Info.damage_generator)
-      user_health = user_health - $Enemy_Info.enemy_damage
-      if user_health < 0
-        user_health = 0
-      end
-      puts ""
-      puts "Critical hit! The enemy has damaged you for " + $Enemy_Info.enemy_damage.to_s + " your health is now " + user_health.to_s
-      puts ""
-      if user_health <= 0
-        puts "You have been defeated"
-        puts ""
-      end
-    else
-      $Basic_Game_Elements_Class.enemy_attack($Enemy_Info.damage_generator)
-      user_health = user_health - $Enemy_Info.enemy_damage
-      if user_health < 0
-        user_health = 0
-      end
-      puts ""
-      puts "The enemy has damaged you for " + $Enemy_Info.enemy_damage.to_s + " your health is now " + user_health.to_s
-      puts ""
-      if user_health <= 0
-        puts "You have been defeated"
-        puts ""
-      end
-    end
-
-    if user_health > 0
-      critical_chance = rand(1...101)
-      if critical_chance >= 90
-        $Basic_Game_Elements_Class.critical_attack($User_Info.weapon_generator)
-        enemy_health = enemy_health - $User_Info.weapon_damage
-        if enemy_health < 0
-          enemy_health = 0
-        end
-        puts ""
-        puts "Critical hit! You have damaged the enemy for " + $User_Info.weapon_damage.to_s + " the enemy's health is now " + enemy_health.to_s
-        puts ""
-        if enemy_health <= 0
-          puts "The enemy has been defeated"
-          puts ""
-        end
-      else
-        $Basic_Game_Elements_Class.attack($User_Info.weapon_generator)
-        enemy_health = enemy_health - $User_Info.weapon_damage
-        if enemy_health < 0
-          enemy_health = 0
-        end
-        puts ""
-        puts "You have damaged the enemy for " + $User_Info.weapon_damage.to_s + " the enemy's health is now " + enemy_health.to_s
-        puts ""
-        if enemy_health <= 0
-          puts "The enemy has been defeated"
-          puts ""
-        end
-      end
-    end
-    
-    return enemy_health, user_health
-  end
-  
-  def enemy_less_speed(enemy_health,user_health)
-    critical_chance = rand(1...101)
-    if critical_chance >= 90
-      $Basic_Game_Elements_Class.critical_attack($User_Info.weapon_generator)
-      enemy_health = enemy_health - $User_Info.weapon_damage
-      if enemy_health < 0
-        enemy_health = 0
-      end
-      puts ""
-      puts "Critical hit! You have damaged the enemy for " + $User_Info.weapon_damage.to_s + " the enemy's health is now " + enemy_health.to_s
-      puts ""
-      if enemy_health <= 0
-        puts "The enemy has been defeated"
-        puts ""
-      end
-    else
-      $Basic_Game_Elements_Class.attack($User_Info.weapon_generator)
-      enemy_health = enemy_health - $User_Info.weapon_damage
-      if enemy_health < 0
-        enemy_health = 0
-      end
-      puts ""
-      puts "You have damaged the enemy for " + $User_Info.weapon_damage.to_s + " the enemy's health is now " + enemy_health.to_s
-      puts ""
-      if enemy_health <= 0
-        puts "The enemy has been defeated"
-        puts ""
-      end
-    end
-
-    if enemy_health > 0
-      enemy_critical_generator = rand(1...101)
-      if enemy_critical_generator >= 90
-        $Basic_Game_Elements_Class.enemy_critical_attack($Enemy_Info.damage_generator)
-        user_health = user_health - $Enemy_Info.enemy_damage
-        if user_health < 0
-          user_health = 0
-        end
-        puts ""
-        puts "Critical hit! The enemy has damaged you for " + $Enemy_Info.enemy_damage.to_s + " your health is now " + user_health.to_s
-        puts ""
-        if user_health <= 0
-          puts "You have been defeated"
-          puts ""
-        end
-      else
-        $Basic_Game_Elements_Class.enemy_attack($Enemy_Info.damage_generator)
-        user_health = user_health - $Enemy_Info.enemy_damage
-        if user_health < 0
-          user_health = 0
-        end
-        puts ""
-        puts "The enemy has damaged you for " + $Enemy_Info.enemy_damage.to_s + " your health is now " + user_health.to_s
-        puts ""
-        if user_health <= 0
-          puts "You have been defeated"
-          puts ""
-        end
-      end
-    end
-    return enemy_health, user_health
   end
   
   def counter(weapon_generator)
@@ -429,133 +558,5 @@ class Basic_Game_Elements_Class
       end
     end
   end
-  
-  def enemy_greater_speed_counter(enemy_health,user_health)
     
-    enemy_critical_generator = rand(1...101)
-    if enemy_critical_generator >= 90
-      $Basic_Game_Elements_Class.enemy_critical_attack_with_counter($Enemy_Info.damage_generator)
-      user_health = user_health - $Enemy_Info.enemy_damage
-      if user_health < 0
-        user_health = 0
-      end
-      puts ""
-      puts "Critical hit! The enemy has damaged you for " + $Enemy_Info.enemy_damage.to_s + " your health is now " + user_health.to_s
-      puts ""
-      if user_health <= 0
-        puts "You have been defeated"
-        puts ""
-      end
-    else
-      $Basic_Game_Elements_Class.enemy_attack_with_counter($Enemy_Info.damage_generator)
-      user_health = user_health - $Enemy_Info.enemy_damage
-      if user_health < 0
-        user_health = 0
-      end
-      puts ""
-      puts "The enemy has damaged you for " + $Enemy_Info.enemy_damage.to_s + " your health is now " + user_health.to_s
-      puts ""
-      if user_health <= 0
-        puts "You have been defeated"
-        puts ""
-      end
-    end
-
-    if user_health > 0
-      critical_chance = rand(1...101)
-      if critical_chance >= 90
-        $Basic_Game_Elements_Class.critical_counter($User_Info.shield_generator)
-        enemy_health = enemy_health - $User_Info.weapon_damage
-        if enemy_health < 0
-          enemy_health = 0
-        end
-        puts ""
-        puts "Critical hit! You have damaged the enemy for " + $User_Info.weapon_damage.to_s + " the enemy's health is now " + enemy_health.to_s
-        puts ""
-        if enemy_health <= 0
-          puts "The enemy has been defeated"
-          puts ""
-        end
-      else
-        $Basic_Game_Elements_Class.counter($User_Info.shield_generator)
-        enemy_health = enemy_health - $User_Info.weapon_damage
-        if enemy_health < 0
-          enemy_health = 0
-        end
-        puts ""
-        puts "You have damaged the enemy for " + $User_Info.weapon_damage.to_s + " the enemy's health is now " + enemy_health.to_s
-        puts ""
-        if enemy_health <= 0
-          puts "The enemy has been defeated"
-          puts ""
-        end
-      end
-    end
-    
-    return enemy_health, user_health
-  end
-  
-  def enemy_less_speed_counter(enemy_health,user_health)
-    critical_chance = rand(1...101)
-    if critical_chance >= 90
-      $Basic_Game_Elements_Class.critical_counter($User_Info.shield_generator)
-      enemy_health = enemy_health - $User_Info.weapon_damage
-      if enemy_health < 0
-        enemy_health = 0
-      end
-      puts ""
-      puts "Critical hit! You have damaged the enemy for " + $User_Info.weapon_damage.to_s + " the enemy's health is now " + enemy_health.to_s
-      puts ""
-      if enemy_health <= 0
-        puts "The enemy has been defeated"
-        puts ""
-      end
-    else
-      $Basic_Game_Elements_Class.counter($User_Info.shield_generator)
-      enemy_health = enemy_health - $User_Info.weapon_damage
-      if enemy_health < 0
-        enemy_health = 0
-      end
-      puts ""
-      puts "You have damaged the enemy for " + $User_Info.weapon_damage.to_s + " the enemy's health is now " + enemy_health.to_s
-      puts ""
-      if enemy_health <= 0
-        puts "The enemy has been defeated"
-        puts ""
-      end
-    end
-
-    if enemy_health > 0
-      enemy_critical_generator = rand(1...101)
-      if enemy_critical_generator >= 90
-        $Basic_Game_Elements_Class.enemy_critical_attack_with_counter($Enemy_Info.damage_generator)
-        user_health = user_health - $Enemy_Info.enemy_damage
-        if user_health < 0
-          user_health = 0
-        end
-        puts ""
-        puts "Critical hit! The enemy has damaged you for " + $Enemy_Info.enemy_damage.to_s + " your health is now " + user_health.to_s
-        puts ""
-        if user_health <= 0
-          puts "You have been defeated"
-          puts ""
-        end
-      else
-        $Basic_Game_Elements_Class.enemy_attack_with_counter($Enemy_Info.damage_generator)
-        user_health = user_health - $Enemy_Info.enemy_damage
-        if user_health < 0
-          user_health = 0
-        end
-        puts ""
-        puts "The enemy has damaged you for " + $Enemy_Info.enemy_damage.to_s + " your health is now " + user_health.to_s
-        puts ""
-        if user_health <= 0
-          puts "You have been defeated"
-          puts ""
-        end
-      end
-    end
-    return enemy_health, user_health
-  end
-  
 end
